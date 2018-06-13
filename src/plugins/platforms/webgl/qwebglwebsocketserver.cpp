@@ -224,7 +224,7 @@ void QWebGLWebSocketServer::sendMessage(QWebSocket *socket,
         typeString = QStringLiteral("changle_title");
         break;
     case MessageType::ChangeCursor:
-        qCDebug(lc) << "Sending change_title to " << socket << values;
+        qCDebug(lc) << "Sending change_cursor to " << socket << values;
         typeString = QStringLiteral("change_cursor");
         break;
     }
