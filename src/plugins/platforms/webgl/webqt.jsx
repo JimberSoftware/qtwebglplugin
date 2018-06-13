@@ -102,8 +102,11 @@ window.onload = function () {
         canvas.style.background = "black";
         canvas.width = width;
         canvas.height = height;
+     
         var body = document.getElementsByTagName("body")[0];
         body.appendChild(canvas);
+
+   
 
         if (!LOADINGSCREEN)
             return canvas;
@@ -229,9 +232,15 @@ window.onload = function () {
         };
 
         canvas.onmousedown = function (event) {
+        
+           var elem=document.getElementById("text");
+            elem.focus()
             qtButtons |= mapButton(event.button);
             sendMouseEvent(qtButtons, event.layerX, event.layerY, event.clientX, event.clientY,
                            name);
+                        
+                         
+                     
         };
 
         canvas.onmousemove = function (event) {
@@ -240,6 +249,7 @@ window.onload = function () {
         };
 
         canvas.onmouseup = function (event) {
+          
             qtButtons &= ~mapButton(event.button);
             sendMouseEvent(qtButtons, event.layerX, event.layerY, event.clientX, event.clientY,
                            name);
@@ -276,6 +286,9 @@ window.onload = function () {
             canvas.addEventListener('DOMMouseScroll', handleMouseWheel, false);
 
         function handleTouch(event) {
+            var elem=document.getElementById("text");
+            elem.focus()
+
             var object = {};
             object["type"] = "touch";
             object["name"] = name;
@@ -1168,7 +1181,7 @@ window.onload = function () {
             case 5: //Qt::SizeVerCursor
                 document.body.style.cursor = "n-resize";
                 break;
-            case 6: //Qt::SizeHorCursor
+            case 6: //Qt::SizeHorCursorkeyHandler
                 document.body.style.cursor = "e-resize";
                 break;
             case 7: //Qt::SizeBDiagCursor
@@ -1181,7 +1194,7 @@ window.onload = function () {
                 document.body.style.cursor = "move";
                 break;
             case 10: //Qt::BlankCursor
-                document.body.style.cursor = "none";
+                document.body.style.cursor = "none";    alert('key');
                 break;
             case 11: //Qt::SplitVCursor
                 document.body.style.cursor = "row-resize";
@@ -1198,7 +1211,7 @@ window.onload = function () {
             case 15: //Qt::WhatsThisCursor
                 document.body.style.cursor = "help";
                 break;
-            case 16: //Qt::BusyCursor
+            case 16: //Qt::Busy    alert('key');Cursor
                 document.body.style.cursor = "progress";
                 break;
             case 17: //Qt::OpenHandCursor
@@ -1222,6 +1235,7 @@ window.onload = function () {
     }
     var setupInput = function () {
         var keyHandler = function (event) {
+        
             var object = { "type" : event.type,
                 "char" : event.char,
                 "key" : event.key,
@@ -1242,6 +1256,35 @@ window.onload = function () {
         document.addEventListener('keypress', keyHandler, true);
         document.addEventListener('keydown', keyHandler, true);
         document.addEventListener('keyup', keyHandler, true);
+
+        var fakeinput = document.getElementsByName("fakeinput")[0];
+        alert("setting up input");
+        fakeinput.oninput = function() {
+            var x = fakeinput.value;
+            var charAdded = x.charAt(x.length - 1);
+     
+            var obj = {
+                "altKey": false,
+                "charCode": 0,
+                "code": "",
+                "ctrlKey": false,
+                "key": charAdded,
+                "keyCode": 97,
+                "location": 0,
+                "metaKey": false,
+                "repeat": false,
+                "shiftKey": false,
+                "string": charAdded,
+                "time": 1528881386861,
+                "type": "keydown",
+                "which": 97
+            }
+            
+            keyHandler(obj);
+            obj.type = "keyup";
+            keyHandler(obj);
+        };
+
     };
     setupInput();
 };

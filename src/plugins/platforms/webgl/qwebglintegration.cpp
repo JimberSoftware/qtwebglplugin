@@ -609,6 +609,9 @@ void QWebGLIntegrationPrivate::handleKeyboard(const ClientData &clientData,
                                               const QString &type,
                                               const QJsonObject &object)
 {
+    QJsonDocument doc(object);
+    QString jsonString = doc.toJson(QJsonDocument::Indented);
+    qInfo() << jsonString;
     const QHash<QString, Qt::Key> keyMap{
         {"Alt", Qt::Key_Alt},
         {"ArrowDown", Qt::Key_Down},
@@ -654,7 +657,11 @@ void QWebGLIntegrationPrivate::handleKeyboard(const ClientData &clientData,
         eventType = QEvent::KeyRelease;
     else
         return;
+
     QString string(object.value("key").toString());
+    qInfo() << " identifier" << object.value("keyIdentifier").toString();
+    qInfo() << "keycode" <<  object.value("keyCode").toString();
+    
     int key = object.value("which").toInt(0);
     if (specialKey != keyMap.end())
     {
@@ -668,8 +675,10 @@ void QWebGLIntegrationPrivate::handleKeyboard(const ClientData &clientData,
         if (key == Qt::Key_Enter && object.value("code").toString() == QStringLiteral("Enter"))
             key = Qt::Key_Return;
     }
-
+    qInfo() << "key2" << string;
     const auto window = clientData.platformWindows.last()->window();
+    qInfo() << "Key3 " << key;
+
     QWindowSystemInterface::handleKeyEvent(window,
                                            timestamp,
                                            eventType,
