@@ -254,6 +254,7 @@ window.onload = function () {
             else if (event.detail)
                 deltaY = event.detail * 40;
             if (deltaY) {
+                
                 var object = { "type" : "wheel",
                     "layerX" : event.layerX, "layerY" : event.layerY,
                     "clientX" : event.clientX, "clientY" : event.clientY,
@@ -261,6 +262,7 @@ window.onload = function () {
                     "time" : new Date().getTime(),
                     "name" : name
                 };
+                console.log(object);
                 sendObject(object);
             }
             if (event.preventDefault)

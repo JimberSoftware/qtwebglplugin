@@ -512,6 +512,7 @@ void QWebGLIntegrationPrivate::handleMouse(const ClientData &clientData, const Q
 
 void QWebGLIntegrationPrivate::handleWheel(const ClientData &clientData, const QJsonObject &object)
 {
+    qInfo() << "Wheelie";
     const auto winId = object.value("name").toInt(-1);
     Q_ASSERT(winId != -1);
     auto platformWindow = findWindow(clientData, winId);
@@ -520,9 +521,10 @@ void QWebGLIntegrationPrivate::handleWheel(const ClientData &clientData, const Q
                      object.value("layerY").toDouble());
     QPointF globalPos(object.value("clientX").toDouble(),
                       object.value("clientY").toDouble());
-    const int deltaX = -object.value("deltaX").toInt(0);
-    const int deltaY = -object.value("deltaY").toInt(0);
+    const int deltaX = static_cast<int>(-object.value("deltaX").toDouble());
+    const int deltaY =  static_cast<int>(-object.value("deltaY").toDouble());
     auto orientation = deltaY != 0 ? Qt::Vertical : Qt::Horizontal;
+
     QWindowSystemInterface::handleWheelEvent(platformWindow->window(),
                                              time,
                                              localPos,
