@@ -254,7 +254,7 @@ void QWebGLHttpServer::answerClient(QTcpSocket *socket, const QUrl &url)
         Q_ASSERT(file.exists());
         file.open(QIODevice::ReadOnly | QIODevice::Text);
         Q_ASSERT(file.isOpen());
-        const auto host = url.host().toUtf8();
+        const auto host = url.host().toUtf8() + url.path().toUtf8();
         const auto port = QString::number(d->webSocketServer->port()).toUtf8();
         QByteArray data = "var host = \"" + host + "\";\r\nvar port = " + port + ";\r\n";
         data += file.readAll();
