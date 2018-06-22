@@ -40,19 +40,23 @@ QWebGLCursor::QWebGLCursor(QWebGLScreen* screen)
 void QWebGLCursor::changeCursor(QCursor *windowCursor, QWindow *window)
 {
 
-
+    if(windowCursor == nullptr || window == nullptr ){
+        return;
+    }
      auto integrationPrivate = QWebGLIntegrationPrivate::instance();
      QSurface* surface = reinterpret_cast<QSurface*>(window);
-     auto clientData = integrationPrivate->findClientData(mScreen);
      
-     if (clientData) {
-         const QVariantMap values {
-            { "cursor", static_cast<int>(windowCursor->shape()) }
-        };
-        if (clientData->socket)
-            integrationPrivate->sendMessage(clientData->socket,
-                                            QWebGLWebSocketServer::MessageType::ChangeCursor,
-                                            values);
+     if(surface != nullptr && mScreen != nullptr){
+        auto clientData = integrationPrivate->findClientData(mScreen);
+        if (clientData != nullptr) {
+            const QVariantMap values {
+                { "cursor", static_cast<int>(windowCursor->shape()) }
+            };
+            if (clientData->socket)
+                integrationPrivate->sendMessage(clientData->socket,
+                                                QWebGLWebSocketServer::MessageType::ChangeCursor,
+                                                values);
+        }
     }
 }
 
