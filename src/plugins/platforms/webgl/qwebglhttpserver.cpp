@@ -253,6 +253,7 @@ void QWebGLHttpServer::answerClient(QTcpSocket *socket, const QUrl &url) {
         QString::fromUtf8(qgetenv("QT_WEBGL_WEBSOCKETSERVER_EXTERNAL")));
 
     QString host;
+    QString path;
     QString port;
 
     if (!externalUrl.isValid() || externalUrl.isEmpty() ||
@@ -261,12 +262,13 @@ void QWebGLHttpServer::answerClient(QTcpSocket *socket, const QUrl &url) {
             port = QString::number(d->webSocketServer->port()).toUtf8();
 
     }else{
-        host = externalUrl.host() + externalUrl.path();
+        host = externalUrl.host();
+        path = externalUrl.path();
         port = QVariant(externalUrl.port()).toString().toUtf8();
     }
 
     QByteArray data =
-        "var host = \"" + host.toUtf8() + "\";\r\nvar port = " + port.toUtf8() + ";\r\n";
+        "var host = \"" + host.toUtf8() + "\";\r\nvar port = " + port.toUtf8() + ";\r\n" + "var path=\"" + path.toUtf8() + "\";\r\n";
     data += file.readAll();
     addData(QByteArrayLiteral("application/javascript"), data);
   } else if (path == QStringLiteral("/favicon.ico")) {
