@@ -52,7 +52,7 @@ void QWebGLCursor::changeCursor(QCursor *windowCursor, QWindow *window)
             const QVariantMap values {
                 { "cursor", static_cast<int>(windowCursor->shape()) }
             };
-            if (clientData->socket)
+            if (clientData->socket != nullptr)
                 integrationPrivate->sendMessage(clientData->socket,
                                                 QWebGLWebSocketServer::MessageType::ChangeCursor,
                                                 values);
