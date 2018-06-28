@@ -55,7 +55,7 @@
 #include <QtGui/qpa/qwindowsysteminterface.h>
 #include <QtThemeSupport/private/qgenericunixthemes_p.h>
 #include <QtWebSockets/qwebsocket.h>
-
+#include <iostream>
 #if defined(QT_QUICK_LIB)
 #include <QtQuick/qquickwindow.h>
 #endif
@@ -72,6 +72,7 @@ QWebGLIntegrationPrivate *QWebGLIntegrationPrivate::instance()
 
 QWebGLIntegration::QWebGLIntegration(quint16 port) : d_ptr(new QWebGLIntegrationPrivate)
 {
+  
     Q_D(QWebGLIntegration);
     d->q_ptr = this;
     d->httpPort = port;
@@ -85,7 +86,8 @@ QWebGLIntegration::QWebGLIntegration(quint16 port) : d_ptr(new QWebGLIntegration
 
     qCDebug(lcWebGL, "WebGL QPA Plugin created");
     qRegisterMetaType<QWebSocket *>("QWebSocket *");
-    qRegisterMetaType<QWebGLWebSocketServer::MessageType>("QWebGLWebSocketServer::MessageType");
+    qRegisterMetaType<QWebGLWebSocketServer::MessageType>("QWebGLWebSocketServer::MessageType");/* */
+      std::cout << "test1233";
 }
 
 QWebGLIntegration::~QWebGLIntegration()
@@ -107,9 +109,9 @@ void QWebGLIntegration::initialize()
     qputenv("QSG_RENDER_LOOP", "threaded"); // Force threaded QSG_RENDER_LOOP
 #endif
 
-    d->inputContext = QPlatformInputContextFactory::create();
-    d->screen = new QWebGLScreen;
-    screenAdded(d->screen, true);
+ //   d->inputContext = QPlatformInputContextFactory::create();
+   // d->screen = new QWebGLScreen;
+   // screenAdded(d->screen, true);
 
     d->webSocketServer = new QWebGLWebSocketServer;
     d->httpServer = new QWebGLHttpServer(d->webSocketServer, this);
@@ -119,17 +121,17 @@ void QWebGLIntegration::initialize()
         qFatal("QWebGLIntegration::initialize: Failed to initialize: %s",
                qPrintable(d->httpServer->errorString()));
     }
-    d->webSocketServerThread = new QThread(this);
+   d->webSocketServerThread = new QThread(this);
     d->webSocketServerThread->setObjectName("WebSocketServer");
     d->webSocketServer->moveToThread(d->webSocketServerThread);
     connect(d->webSocketServerThread, &QThread::finished,
             d->webSocketServer, &QObject::deleteLater);
-    QMetaObject::invokeMethod(d->webSocketServer, "create", Qt::QueuedConnection);
-    QMutexLocker lock(d->webSocketServer->mutex());
-    d->webSocketServerThread->start();
-    d->webSocketServer->waitCondition()->wait(d->webSocketServer->mutex());
+   QMetaObject::invokeMethod(d->webSocketServer, "create", Qt::QueuedConnection);
+    //QMutexLocker lock(d->webSocketServer->mutex());
+      d->webSocketServerThread->start();
+ //   d->webSocketServer->waitCondition()->wait(d->webSocketServer->mutex());
 
-    qGuiApp->setQuitOnLastWindowClosed(false);
+   // qGuiApp->setQuitOnLastWindowClosed(false);*/
 }
 
 void QWebGLIntegration::destroy()
@@ -509,8 +511,10 @@ void QWebGLIntegrationPrivate::handleWheel(const ClientData &clientData, const Q
                      object.value("layerY").toDouble());
     QPointF globalPos(object.value("clientX").toDouble(),
                       object.value("clientY").toDouble());
-    const int deltaX = -object.value("deltaX").toInt(0);
-    const int deltaY = -object.value("deltaY").toInt(0);
+                      
+    const int deltaX = static_cast<int>(-object.value("deltaX").toDouble());
+    const int deltaY =  static_cast<int>(-object.value("deltaY").toDouble());
+
     auto orientation = deltaY != 0 ? Qt::Vertical : Qt::Horizontal;
     QWindowSystemInterface::handleWheelEvent(platformWindow->window(),
                                              time,
