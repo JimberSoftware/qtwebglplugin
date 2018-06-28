@@ -522,8 +522,9 @@ void QWebGLIntegrationPrivate::handleWheel(const ClientData &clientData, const Q
                      object.value("layerY").toDouble());
     QPointF globalPos(object.value("clientX").toDouble(),
                       object.value("clientY").toDouble());
-    const int deltaX = -object.value("deltaX").toInt(0);
-    const int deltaY = -object.value("deltaY").toInt(0);
+                      
+    const int deltaX = static_cast<int>(-object.value("deltaX").toDouble());
+    const int deltaY =  static_cast<int>(-object.value("deltaY").toDouble());
     auto orientation = deltaY != 0 ? Qt::Vertical : Qt::Horizontal;
 
     QPoint point = (orientation == Qt::Vertical) ? QPoint(0, deltaY) : QPoint(deltaX, 0);
