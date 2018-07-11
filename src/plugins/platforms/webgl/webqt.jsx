@@ -36,7 +36,7 @@ window.onload = function () {
     var DEBUG = 0;
     var LOADINGSCREEN = 1;
     var canvas;
-    var socket = new WebSocket("ws://" + host + ":" + port);
+    var socket = new WebSocket("ws://" + host + path + ":" + port);
     socket.binaryType = "arraybuffer";
     var CONNECT_SERIAL = 666;
     var gl;
