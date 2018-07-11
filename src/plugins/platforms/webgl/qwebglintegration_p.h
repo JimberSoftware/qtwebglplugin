@@ -107,7 +107,7 @@ public:
                            const double physicalWidth,
                            const double physicalHeight);
     void clientDisconnected(QWebSocket *socket);
-
+    void showInput();
     void connectNextClient();
 
     void sendMessage(QWebSocket *socket,

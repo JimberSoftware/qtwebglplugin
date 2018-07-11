@@ -21,7 +21,8 @@ HEADERS += \
     qwebglscreen.h \
     qwebglwebsocketserver.h \
     qwebglwindow.h \
-    qwebglwindow_p.h
+    qwebglwindow_p.h \
+    qwebglplatforminputcontext.h
 
 SOURCES += \
     qwebglcontext.cpp \
@@ -33,7 +34,8 @@ SOURCES += \
     qwebglplatformservices.cpp \
     qwebglscreen.cpp \
     qwebglwebsocketserver.cpp \
-    qwebglwindow.cpp
+    qwebglwindow.cpp \
+    qwebglplatforminputcontext.cpp
 
 RESOURCES += \
     webgl.qrc

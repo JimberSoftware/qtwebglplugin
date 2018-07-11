@@ -36,6 +36,7 @@
 #include "qwebglhttpserver.h"
 #include "qwebglwebsocketserver.h"
 #include "qwebglplatformservices.h"
+#include "qwebglplatforminputcontext.h"
 
 #include <QtCore/qjsonarray.h>
 #include <QtCore/qjsondocument.h>
@@ -51,6 +52,7 @@
 #include <QtGui/qopenglcontext.h>
 #include <QtGui/qoffscreensurface.h>
 #include <QtGui/qpa/qplatformwindow.h>
+#include <QtGui/qpa/qplatforminputcontext.h>
 #include <QtGui/private/qguiapplication_p.h>
 #include <QtGui/qpa/qwindowsysteminterface.h>
 #include <QtThemeSupport/private/qgenericunixthemes_p.h>
@@ -107,7 +109,8 @@ void QWebGLIntegration::initialize()
     qputenv("QSG_RENDER_LOOP", "threaded"); // Force threaded QSG_RENDER_LOOP
 #endif
 
-    d->inputContext = QPlatformInputContextFactory::create();
+    d->inputContext = new QWeblGlPlatformInputContext();
+
     d->screen = new QWebGLScreen;
     screenAdded(d->screen, true);
 
@@ -139,8 +142,9 @@ void QWebGLIntegration::destroy()
         w->destroy();
 
     destroyScreen(d->screen);
-
+    delete d->inputContext;
     d->screen = nullptr;
+    d->inputContext = nullptr;
 
     d->webSocketServerThread->quit();
     d->webSocketServerThread->wait();
@@ -292,6 +296,18 @@ void QWebGLIntegration::openUrl(const QUrl &url)
         d->sendMessage(clientData.socket, QWebGLWebSocketServer::MessageType::OpenUrl, values);
     }
 }
+
+void QWebGLIntegrationPrivate::showInput()
+{
+    
+    QMutexLocker locker(&clients.mutex);
+    for (auto &clientData : clients.list)
+    {
+         const QVariantMap values{};
+        sendMessage(clientData.socket, QWebGLWebSocketServer::MessageType::ShowInput, values );
+    }
+}
+
 
 QWebGLIntegrationPrivate::ClientData *QWebGLIntegrationPrivate::findClientData(
     const QWebSocket *socket)

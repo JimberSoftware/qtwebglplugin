@@ -227,6 +227,10 @@ void QWebGLWebSocketServer::sendMessage(QWebSocket *socket,
         qCDebug(lc) << "Sending change_cursor to " << socket << values;
         typeString = QStringLiteral("change_cursor");
         break;
+    case MessageType::ShowInput:
+        qCDebug(lc) << "Sending show_input to " << socket << values;
+        typeString = QStringLiteral("show_input");
+        break;
     }
     QJsonDocument document;
     auto commandObject = QJsonObject::fromVariantMap(values);
