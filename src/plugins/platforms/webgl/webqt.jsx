@@ -1263,11 +1263,12 @@ window.onload = function () {
         var keyHandler = function (event, realevent = true) {
             console.log("keyhandler");
                 if(!realevent || event.key == "Backspace"){
-                    
-                    var diff = new Date() - lastFakeBackspace;
-                    if (diff < 100 ){ // check if tap or drag, only tap hides input
-                        return;
-                    }
+                    if(event.key == "Backspace"){
+                        var diff = new Date() - lastFakeBackspace;
+                        if (diff < 100 ){ // check if tap or drag, only tap hides input
+                            return;
+                        }
+                    }   
                     lastFakeBackspace = new Date();
             
 
